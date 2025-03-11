@@ -219,25 +219,25 @@ const Productdetails = ({ name, image, colors }) => {
             {/* Product Details Section For larger Screen */}
             <div ref={productDetailsSection} className="lg:flex hidden font-gothic gap-4 my-10 py-10  px-3">
               {/* Left Side */}
-              <div className="flex flex-col gap-14 py-5 max-w-[200px]">
+              <div className="flex flex-col gap-14 py-5">
                 <button
                   onClick={() => setActiveSection("Product Details")}
-                  className={`text-start  3xl:text-2xl pl-4 py-3 rounded-lg border-[1px] border-gray-400 transition-all duration-300 ${activeSection === "Product Details" ? "bg-[#663634] border-transparent text-white" : "bg-transparent text-gray-700"}`}>
+                  className={`text-start 3xl:text-2xl px-5 pl-4 py-3 rounded-lg border-[1px] border-gray-400 transition-all duration-300 ${activeSection === "Product Details" ? "bg-[#663634] border-transparent text-white" : "bg-transparent text-gray-700"}`}>
                   Product Details
                 </button>
                 <button
                   onClick={() => setActiveSection("Price Breakup")}
-                  className={`text-start  3xl:text-2xl pl-4 py-3 rounded-lg border-[1px] border-gray-400 transition-all duration-300 ${activeSection === "Price Breakup" ? "bg-[#663634] border-transparent text-white" : "bg-transparent text-gray-700"}`}>
+                  className={`text-start  3xl:text-2xl px-5  pl-4 py-3 rounded-lg border-[1px] border-gray-400 transition-all duration-300 ${activeSection === "Price Breakup" ? "bg-[#663634] border-transparent text-white" : "bg-transparent text-gray-700"}`}>
                   Price Breakup
                 </button>
                 <button
                   onClick={() => setActiveSection("Shipping Details")}
-                  className={`text-start  3xl:text-2xl pl-4 py-3 rounded-lg border-[1px] border-gray-400 transition-all duration-300 ${activeSection === "Shipping Details" ? "bg-[#663634] border-transparent text-white" : "bg-transparent text-gray-700"}`}>
+                  className={`text-start  3xl:text-2xl px-5  pl-4 py-3 rounded-lg border-[1px] border-gray-400 transition-all duration-300 ${activeSection === "Shipping Details" ? "bg-[#663634] border-transparent text-white" : "bg-transparent text-gray-700"}`}>
                   Shipping Details
                 </button>
                 <button
                   onClick={() => setActiveSection("Returns/Exchange")}
-                  className={`text-start  3xl:text-2xl pl-4 py-3 rounded-lg border-[1px] border-gray-400 transition-all duration-300 ${activeSection === "Returns/Exchange" ? "bg-[#663634] border-transparent text-white" : "bg-transparent text-gray-700"}`}>
+                  className={`text-start  3xl:text-2xl px-5 pl-4 py-3 rounded-lg border-[1px] border-gray-400 transition-all duration-300 ${activeSection === "Returns/Exchange" ? "bg-[#663634] border-transparent text-white" : "bg-transparent text-gray-700"}`}>
                   Returns/Exchange
                 </button>
               </div>
