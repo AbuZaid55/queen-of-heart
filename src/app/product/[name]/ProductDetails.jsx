@@ -254,7 +254,7 @@ const Productdetails = ({ name, image, colors }) => {
                       <h1>Total Diamond Weight:</h1>
                       <p>{selectedPrice?.totalDiamondWeight} CTS</p>
                     </div>
-                    <div className={`${product.gemstone_weight ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
+                    <div className={`${product?.gemstone_weight ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
                       <h1>Gemstone Weight:</h1>
                       <p>{product?.gemstone_weight} CTS</p>
                     </div>
@@ -308,7 +308,7 @@ const Productdetails = ({ name, image, colors }) => {
                     <div className={`${selectedPrice?.subTotal ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
                       <h1>SubTotal</h1>
                       <p className="flex gap-2">
-                        <span className={selectedPrice?.totalAfterDiscount ? "" : "hidden"}>₹{selectedPrice?.totalAfterDiscount}</span> <span className={selectedPrice?.totalAfterDiscount ? "text-nowrap" : "hidden"}> ({selectedPrice?.discount_on_total}% off) </span>{" "}
+                        <span className={selectedPrice?.discount_on_total ? "" : "hidden"}>₹{selectedPrice?.totalAfterDiscount}</span> <span className={selectedPrice?.discount_on_total ? "text-nowrap" : "hidden"}> ({selectedPrice?.discount_on_total}% off) </span>{" "}
                         <span className={selectedPrice?.discount_on_total ? "line-through" : ""}>₹{selectedPrice?.subTotal}</span>
                       </p>
                     </div>
@@ -531,27 +531,27 @@ const Productdetails = ({ name, image, colors }) => {
 
                 <div className={`transition-all duration-500 overflow-hidden ease-in-out ${openDetails ? "max-h-[300px]" : "max-h-0"}`}>
                   <div>
-                    <div className={`  border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
+                    <div className={`${selectedPrice?.total_gold_weight?"":"hidden"}  border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
                       <h1>Net Gold Weight:</h1>
                       <p>{selectedPrice?.total_gold_weight}</p>
                     </div>
-                    <div className={`  border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
+                    <div className={`${selectedPrice?.totalDiamondWeight?"":"hidden"}    border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
                       <h1>Total Diamond Weight:</h1>
                       <p>{selectedPrice?.totalDiamondWeight}</p>
                     </div>
-                    <div className={` border-b-[1px]  flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
+                    <div className={`${product?.gemstone_weight?"":"hidden"}   border-b-[1px]  flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
                       <h1>Gemstone Weight:</h1>
                       <p>{product?.gemstone_weight}</p>
                     </div>
-                    <div className={`  border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
+                    <div className={` ${product?.gemstone_name?"":"hidden"}   border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
                       <h1>Gemstone Name:</h1>
                       <p>{product?.gemstone_name}</p>
                     </div>
-                    <div className={`  border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
+                    <div className={`${product?.collection?.name?"":"hidden"}    border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
                       <h1>Collection:</h1>
                       <p>{product?.collection?.name}</p>
                     </div>
-                    <div className={` flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
+                    <div className={` ${product?.style?.name?"":"hidden"} flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
                       <h1>Style:</h1>
                       <p>{product?.style?.name}</p>
                     </div>
@@ -603,11 +603,11 @@ const Productdetails = ({ name, image, colors }) => {
                   <div className={`${selectedPrice?.subTotal ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
                     <h1>SubTotal</h1>
                     <p className="flex gap-2">
-                      <span className={selectedPrice?.totalAfterDiscount ? "" : "hidden"}>₹{selectedPrice?.totalAfterDiscount}</span> <span className={selectedPrice?.totalAfterDiscount ? "text-nowrap" : "hidden"}> ({selectedPrice?.discount_on_total}% off) </span>{" "}
+                      <span className={selectedPrice?.discount_on_total ? "" : "hidden"}>₹{selectedPrice?.totalAfterDiscount}</span> <span className={selectedPrice?.discount_on_total ? "text-nowrap" : "hidden"}> ({selectedPrice?.discount_on_total}% off) </span>{" "}
                       <span className={selectedPrice?.discount_on_total ? "line-through" : ""}>₹{selectedPrice?.subTotal}</span>
                     </p>
                   </div>
-                  <div className={`${selectedPrice?.gstAmount ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
+                  <div className={`${selectedPrice?.gst ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
                     <h1>Tax ({selectedPrice?.gst}%)</h1>
                     <p>₹{selectedPrice?.gstAmount}</p>
                   </div>
