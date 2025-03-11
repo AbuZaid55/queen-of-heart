@@ -9,9 +9,6 @@ import { queenOfHeartsArray } from '@/Data/cardsData'
 import HeroSection from '@/components/ui/HeroSection'
 import { Provider } from 'react-redux'
 import appStore from '@/store/store'
-import dotenv from 'dotenv'
-
-dotenv.config()
 
 // Lazy Loaded Components
 const Hallmarks = dynamic(()=> import('@/components/ui/Hallmarks'))
