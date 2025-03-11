@@ -1,0 +1,76 @@
+
+export const cartData = [
+    {
+      name: "0.15 & 0.20 ct Irresistible Radiance Solitaire Diamond Necklace",
+      color: "Rose Gold",
+      purity: "18K",
+      diamondGrade: "SI-GH",
+      RingSize: "12",
+      price: "72369",
+      Quantity: "1",
+      img: "/public/assets/cartimage.jpg",
+    },
+    {
+      name: "0.15 & 0.20 ct Irresistible Radiance Solitaire Diamond Necklace",
+      color: "Rose Gold",
+      purity: "18K",
+      diamondGrade: "SI-GH",
+      RingSize: "12",
+      price: "72369",
+      Quantity: "1",
+      img: "/public/assets/cartimage.jpg",
+    },
+    {
+      name: "0.15 & 0.20 ct Irresistible Radiance Solitaire Diamond Necklace",
+      color: "Rose Gold",
+      purity: "18K",
+      diamondGrade: "SI-GH",
+      RingSize: "12",
+      price: "72369",
+      Quantity: "1",
+      img: "/public/assets/cartimage.jpg",
+    },
+    {
+      name: "0.15 & 0.20 ct Irresistible Radiance Solitaire Diamond Necklace",
+      color: "Rose Gold",
+      purity: "18K",
+      diamondGrade: "SI-GH",
+      RingSize: "12",
+      price: "72369",
+      Quantity: "1",
+      img: "/public/assets/cartimage.jpg",
+    },
+    {
+      name: "0.15 & 0.20 ct Irresistible Radiance Solitaire Diamond Necklace",
+      color: "Rose Gold",
+      purity: "18K",
+      diamondGrade: "SI-GH",
+      RingSize: "12",
+      price: "72369",
+      Quantity: "1",
+      img: "/public/assets/cartimage.jpg",
+    }
+
+
+export const cartData = [
+  {
+    name: "0.15 & 0.20 ct Irresistible Radiance Solitaire Diamond Necklace",
+    color: "Rose Gold",
+    purity: "18K",
+    diamondGrade: "SI-GH",
+    RingSize: "12",
+    price: "72369",
+    Quantity: "1",
+    img: "/assets/cart.png",
+  },
+  {
+    name: "0.15 & 0.20 ct Irresistible Radiance Solitaire Diamond Necklace",
+    color: "Rose Gold",
+    purity: "18K",
+    diamondGrade: "SI-GH",
+    RingSize: "12",
+    price: "72369",
+    Quantity: "1",
+    img: "/assets/cart.png",
+  },
+];
