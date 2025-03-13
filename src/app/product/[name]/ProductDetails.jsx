@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { overallDetails, priceBreakup, productDetails, slides } from "@/Data/cardsData";
+import { overallDetails, slides } from "@/Data/cardsData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faShareNodes, faTruck, faLock, faArrowDown, faVideo } from "@fortawesome/free-solid-svg-icons";
@@ -15,21 +15,15 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import EmblaCarousel from "./EmblaCarousel";
 import api from "@/utils/api";
 import getPrice from "../../../utils/getPrices";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.registerPlugin(ScrollToPlugin);
 
-const Productdetails = ({ name, image, colors }) => {
-  const productData = [
-    {
-      title: "Alluring Dazzle Diamond Jacket Ring",
-      discountedPrice: "23,564",
-      actualPrice: "33,564",
-    },
-  ];
-
-  // const dispatch = useDispatch()
-  const labelsRef = useRef(null);
+const Productdetails = ({ name, image }) => {
+  const labelRef1 = useRef(null);
+  const labelRef2 = useRef(null);
+  const labelRef3 = useRef(null);
   const buttonRef = useRef(null);
   const placeholderRef = useRef(null);
   const sidebarMenu = useRef(null);
@@ -40,7 +34,6 @@ const Productdetails = ({ name, image, colors }) => {
   const [selectedImages, setSelectedImg] = useState([]);
 
   const [activeSection, setActiveSection] = useState(overallDetails[0].name);
-  const activeContent = overallDetails.find((section) => section.name === activeSection);
 
   const [openDetails, setOpenDetails] = useState(false);
   const [openPriceBreakup, setPriceBreakup] = useState(false);
@@ -59,13 +52,26 @@ const Productdetails = ({ name, image, colors }) => {
     const placeholder = placeholderRef.current;
 
     gsap.set(sidebarMenu.current, { xPercent: 100, opacity: 1 });
-    gsap.from(labelsRef.current, {
-      scale: 1.02,
+    gsap.from(labelRef1.current, {
+      scale: 1.05,
       opacity: 1,
       repeat: -1,
       yoyo: true,
       duration: 1,
-      transformOrigin: "center center",
+    });
+    gsap.from(labelRef2.current, {
+      scale: 1.05,
+      opacity: 1,
+      repeat: -1,
+      yoyo: true,
+      duration: 1,
+    });
+    gsap.from(labelRef3.current, {
+      scale: 1.05,
+      opacity: 1,
+      repeat: -1,
+      yoyo: true,
+      duration: 1,
     });
 
     gsap.to(button, {
@@ -161,10 +167,7 @@ const Productdetails = ({ name, image, colors }) => {
     }
   };
 
-  const handleCart = () => {
-    console.log(productData);
-    // dispatch(c)
-  };
+  const handleCart = () => {};
 
   useEffect(() => {
     getProductDetails();
@@ -186,7 +189,7 @@ const Productdetails = ({ name, image, colors }) => {
       }
     });
   }, [selectedOptions]);
-console.log(selectedPrice)
+
   return (
     <div className="bg-[#F7ECEB] relative font-century ">
       <div className="w-full md:w-[95%]  m-auto p-1 pt-44 ">
@@ -197,9 +200,9 @@ console.log(selectedPrice)
             <div className="grid  grid-cols-6 md:grid-cols-2 gap-3 lg:w-full w-[95%] mx-auto">
               {/* Main Image Display */}
               <div className="aspect-square bg-white relative overflow-hidden col-start-1 col-end-7 md:col-end-1">
-                <label className="absolute z-50 top-1 lg:hidden block">
+                {/* <label className="absolute z-50 top-1 lg:hidden block">
                   <img src="/assets/labels/trending.svg" className="w-36" />
-                </label>
+                </label> */}
                 <div style={{ width: `${image.length * 100}%`, left: `-${slideImage * 100}%` }} className="h-full  rounded-md flex relative transition-all ease-in-out duration-700 object-cover">
                   {selectedImages?.map((image, i) => (
                     <div key={i} className="aspect-square bg-white relative cursor-pointer" onMouseMove={(e) => handleMouseMove(e, document.getElementById(`img-${i}`), e.currentTarget)} onMouseLeave={() => handleMouseLeave(document.getElementById(`img-${i}`))}>
@@ -264,11 +267,11 @@ console.log(selectedPrice)
                     </div>
                     <div className={`${product?.collection?.name ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
                       <h1>Collection:</h1>
-                      <p>{product?.collection?.name}</p>
+                      <Link className="hover:border-b  border-gray-400 cursor-pointer" href={`/collection/${product?.collection?.name?.replaceAll(" ","-").toLowerCase()}`}><p>{product?.collection?.name}</p></Link>
                     </div>
                     <div className={`${product?.style?.name ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
                       <h1>Style:</h1>
-                      <p>{product?.style?.name}</p>
+                      <Link className="hover:border-b  border-gray-400 cursor-pointer" href={`/${product?.category?.name?.replaceAll(" ","-").toLowerCase()}?style=${product?.style?.name?.replaceAll(" ","-").toLowerCase()}`}><p>{product?.style?.name}</p></Link>
                     </div>
                   </div>
 
@@ -322,7 +325,7 @@ console.log(selectedPrice)
                       <p>₹{selectedPrice?.extraFee}</p>
                     </div>
                     <div className={`${selectedPrice?.subTotal ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
-                      <h1>{selectedPrice?.gst?"SubTotal":"Total"}</h1>
+                      <h1>{selectedPrice?.gst ? "SubTotal" : "Total"}</h1>
                       <p className="flex gap-2">
                         <span className={selectedPrice?.discount_on_total ? "" : "hidden"}>₹{selectedPrice?.totalAfterDiscount}</span> <span className={selectedPrice?.discount_on_total ? "text-nowrap" : "hidden"}> ({selectedPrice?.discount_on_total}% off) </span>{" "}
                         <span className={selectedPrice?.discount_on_total ? "line-through" : ""}>₹{selectedPrice?.subTotal}</span>
@@ -332,7 +335,7 @@ console.log(selectedPrice)
                       <h1>Tax ({selectedPrice?.gst}%)</h1>
                       <p>₹{selectedPrice?.gstAmount}</p>
                     </div>
-                    <div className={`${(!selectedPrice?.finalTotalPrice || !selectedPrice?.gst) ? "hidden" : ""} flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
+                    <div className={`${!selectedPrice?.finalTotalPrice || !selectedPrice?.gst ? "hidden" : ""} flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
                       <h1>Total</h1>
                       <p>₹{selectedPrice?.finalTotalPrice}</p>
                     </div>
@@ -378,8 +381,10 @@ console.log(selectedPrice)
                 </div>
               </div>
 
-              <div ref={labelsRef} className="lg:block hidden ">
-                <img src="/assets/labels/best-seller.svg" />
+              <div className="flex flex-col gap-1 w-36">
+                <img ref={labelRef1} className={`${product?.best_seller ? "" : "hidden"}`} src="/assets/labels/best-seller.svg" />
+                <img ref={labelRef2} className={`${product?.trending ? "" : "hidden"}`} src="/assets/labels/trending.svg" />
+                <img ref={labelRef3} className={` ${product?.new_arrival ? "" : "hidden"}`} src="/assets/labels/new-arrivial.svg" />
               </div>
               {/* Color Selection  */}
               <div>
@@ -547,29 +552,29 @@ console.log(selectedPrice)
 
                 <div className={`transition-all duration-500 overflow-hidden ease-in-out ${openDetails ? "max-h-[300px]" : "max-h-0"}`}>
                   <div>
-                    <div className={`${selectedPrice?.total_gold_weight?"":"hidden"}  border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
+                    <div className={`${selectedPrice?.total_gold_weight ? "" : "hidden"}  border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
                       <h1>Net Gold Weight:</h1>
                       <p>{selectedPrice?.total_gold_weight}</p>
                     </div>
-                    <div className={`${selectedPrice?.totalDiamondWeight?"":"hidden"}    border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
+                    <div className={`${selectedPrice?.totalDiamondWeight ? "" : "hidden"}    border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
                       <h1>Total Diamond Weight:</h1>
                       <p>{selectedPrice?.totalDiamondWeight}</p>
                     </div>
-                    <div className={`${product?.gemstone_weight?"":"hidden"}   border-b-[1px]  flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
+                    <div className={`${product?.gemstone_weight ? "" : "hidden"}   border-b-[1px]  flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
                       <h1>Gemstone Weight:</h1>
                       <p>{product?.gemstone_weight}</p>
                     </div>
-                    <div className={` ${product?.gemstone_name?"":"hidden"}   border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
+                    <div className={` ${product?.gemstone_name ? "" : "hidden"}   border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
                       <h1>Gemstone Name:</h1>
                       <p>{product?.gemstone_name}</p>
                     </div>
-                    <div className={`${product?.collection?.name?"":"hidden"}    border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
+                    <div className={`${product?.collection?.name ? "" : "hidden"}    border-b-[1px] flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
                       <h1>Collection:</h1>
-                      <p>{product?.collection?.name}</p>
+                      <Link className="hover:border-b  border-gray-400 cursor-pointer" href={`/collection/${product?.collection?.name?.replaceAll(" ","-").toLowerCase()}`}><p>{product?.collection?.name}</p></Link>
                     </div>
-                    <div className={` ${product?.style?.name?"":"hidden"} flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
+                    <div className={` ${product?.style?.name ? "" : "hidden"} flex flex-row text-gray-500 text-[16px] py-1.5  border-gray-400 justify-between`}>
                       <h1>Style:</h1>
-                      <p>{product?.style?.name}</p>
+                      <Link className="hover:border-b  border-gray-400 cursor-pointer" href={`/${product?.category?.name?.replaceAll(" ","-").toLowerCase()}?style=${product?.style?.name?.replaceAll(" ","-").toLowerCase()}`}><p>{product?.style?.name}</p></Link>
                     </div>
                   </div>
                 </div>
@@ -617,23 +622,23 @@ console.log(selectedPrice)
                     <p>₹{selectedPrice?.wastageCharge}</p>
                   </div>
                   <div className={`${selectedPrice?.laborCost ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
-                      <h1>Labor Cost</h1>
-                      <p>₹{selectedPrice?.laborCost}</p>
-                    </div>
-                    <div className={`${selectedPrice?.pearlCost ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
-                      <h1>Pearl Cost</h1>
-                      <p>₹{selectedPrice?.pearlCost}</p>
-                    </div>
-                    <div className={`${selectedPrice?.extraCost ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
-                      <h1>Extra Cost</h1>
-                      <p>₹{selectedPrice?.extraCost}</p>
-                    </div>
-                    <div className={`${selectedPrice?.extraFee ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
-                      <h1>Extra Fee</h1>
-                      <p>₹{selectedPrice?.extraFee}</p>
-                    </div>
+                    <h1>Labor Cost</h1>
+                    <p>₹{selectedPrice?.laborCost}</p>
+                  </div>
+                  <div className={`${selectedPrice?.pearlCost ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
+                    <h1>Pearl Cost</h1>
+                    <p>₹{selectedPrice?.pearlCost}</p>
+                  </div>
+                  <div className={`${selectedPrice?.extraCost ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
+                    <h1>Extra Cost</h1>
+                    <p>₹{selectedPrice?.extraCost}</p>
+                  </div>
+                  <div className={`${selectedPrice?.extraFee ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
+                    <h1>Extra Fee</h1>
+                    <p>₹{selectedPrice?.extraFee}</p>
+                  </div>
                   <div className={`${selectedPrice?.subTotal ? "" : "hidden"} border-b-[1px] flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
-                    <h1>{selectedPrice?.gst?"SubTotal":"Total"}</h1>
+                    <h1>{selectedPrice?.gst ? "SubTotal" : "Total"}</h1>
                     <p className="flex gap-2">
                       <span className={selectedPrice?.discount_on_total ? "" : "hidden"}>₹{selectedPrice?.totalAfterDiscount}</span> <span className={selectedPrice?.discount_on_total ? "text-nowrap" : "hidden"}> ({selectedPrice?.discount_on_total}% off) </span>{" "}
                       <span className={selectedPrice?.discount_on_total ? "line-through" : ""}>₹{selectedPrice?.subTotal}</span>
@@ -643,7 +648,7 @@ console.log(selectedPrice)
                     <h1>Tax ({selectedPrice?.gst}%)</h1>
                     <p>₹{selectedPrice?.gstAmount}</p>
                   </div>
-                  <div className={`${(!selectedPrice?.finalTotalPrice || !selectedPrice?.gst) ? "hidden" : ""} flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
+                  <div className={`${!selectedPrice?.finalTotalPrice || !selectedPrice?.gst ? "hidden" : ""} flex flex-row text-gray-500 text-[16px] py-3  border-gray-400 justify-between`}>
                     <h1>Total</h1>
                     <p>₹{selectedPrice?.finalTotalPrice}</p>
                   </div>

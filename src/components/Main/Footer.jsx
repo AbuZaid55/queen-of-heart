@@ -25,7 +25,7 @@ const Footer = () => {
   const imageSrc = imageMap[pathName] || "/assets/eshop/Gulz-brown.svg"; 
 
   return (
-    <div className={`${bgChange.includes(pathName)?'bg-white border-top border-[1px] border-black text-black':'bg-[#F7ECEB] text-[#663634]'} font-gothic w-full   pt-10 `}>
+    <div id="footerHeight" className={` ${bgChange.includes(pathName)?'bg-white border-top border-[1px] border-black text-black':'bg-[#F7ECEB] text-[#663634]'} font-gothic w-full   pt-10 `}>
       <div className="min-h-[35vh] w-[80%] lg:w-[85vw] mx-auto flex flex-col py-3 border-b border-amber-950">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 md:px-8 lg:px-0 md:space-x-10">
           <div className="flex justify-center lg:justify-start items-center mb-1 md:mb-0">

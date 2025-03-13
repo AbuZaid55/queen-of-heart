@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
-import CardsOne from "../../components/Product/CardsOne";
+import CardsOne from "../../../components/Product/CardsOne";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import api from "@/utils/api";
@@ -19,15 +19,14 @@ const page = () => {
   const [trending, setTrending] = useState(false);
   const [bestSeller, setBestSeller] = useState(false);
   const [isWhatsNewOpen, setWhatsNewOpen] = useState(false);
-  const [categoryData, setCategoryData] = useState({});
-  const [styleList, setStyleList] = useState([]);
+  const [collectionData, setCollectionData] = useState({});
   const [recommendedList, setRecommendedList] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
   const [productList, setProductList] = useState([]);
-  const { category } = useParams();
-  const name = category.replaceAll("-", " ");
+  const [categoryList, setCategoryList] = useState([]);
+  const { name: collectionName } = useParams();
+  const name = collectionName.replaceAll("-", " ");
   const params = useSearchParams();
-  const styleName = params.get("style");
   const recommendedParams = params.get("recommended")?.split(",") || [];
 
   const [page, setPage] = useState(1);
@@ -39,6 +38,7 @@ const page = () => {
   const paramsString = new URLSearchParams(params.toString());
 
   const [priceFilter, setPriceFilter] = useState("LowToHigh");
+  const [categoryId, setCategoryId] = useState("");
 
   // Refs to track clicks outside the menu
   const categoryRef = useRef(null);
@@ -51,14 +51,6 @@ const page = () => {
   // Handle filter selection
   const handleFilterClick = (type, value) => {
     value = value.toLowerCase();
-    if (type === "style") {
-      if (paramsString.has(type) && paramsString.get(type) === value) {
-        paramsString.delete(type);
-      } else {
-        paramsString.set(type, value);
-      }
-      router.push(`?${paramsString.toString()}`, { scroll: false });
-    }
     if (type === "recommended") {
       let currentValues = paramsString.get(type)?.split(",") || [];
       if (currentValues.includes(value)) {
@@ -75,27 +67,21 @@ const page = () => {
     }
   };
 
-  const getCategory = async () => {
+  const getCollection = async () => {
     if (!name) return;
     try {
-      const res = await api.get(`/store/eshop/categories/get-category-by-name/${name}`);
+      const res = await api.get(`/store/eshop/collections/get-collection-by-name/${name}`);
       const data = res.data;
-      setCategoryData(data);
+      setCollectionData(data);
     } catch (error) {
       console.log(error);
     }
   };
 
   const getProduct = async () => {
-    if (!categoryData?._id || loading) return;
+    if (!collectionData?._id || loading) return;
     setLoading(true);
-    let styleId = "";
     let recommendedIds = [];
-    categoryData?.styles?.map((style) => {
-      if (style.name.toLowerCase() === styleName?.toLowerCase()) {
-        styleId = style._id;
-      }
-    });
     recommendedList.map((recommended) => {
       if (recommendedParams.includes(recommended?.name.toLowerCase())) {
         if (!recommendedIds.includes(recommended._id)) {
@@ -104,19 +90,19 @@ const page = () => {
       }
     });
     try {
-      const res = await api.post("/store/eshop/products/get-products", { category: categoryData._id, style: styleId, recommendedId: recommendedIds, trending: trending, best_seller: bestSeller, new_arrival: newArrival, page: page, limit: itemPerPage });
+      const res = await api.post("/store/eshop/products/get-products", { collection: collectionData._id,category:categoryId, recommendedId: recommendedIds, trending: trending, best_seller: bestSeller, new_arrival: newArrival, page: page, limit: itemPerPage });
       const data = await res.data;
       const updatedData = data?.products?.map((product) => ({
         ...product,
         price: getPrices(product)[0]?.finalTotalPrice || 0,
       }));
       const sortedProducts = [...updatedData].sort((a, b) => (priceFilter === "HighToLow" ? (b.price || 0) - (a.price || 0) : (a.price || 0) - (b.price || 0)));
-      if(page===1){
+      if (page === 1) {
         setProductList(sortedProducts);
-      }else{
+      } else {
         setProductList([...productList, ...sortedProducts]);
       }
-      setStyleList(data?.styles);
+      setCategoryList(data?.categories);
       setRecommendedList(data?.recommendeds);
       setTotalRecords(data?.totalRecords);
     } catch (error) {
@@ -125,9 +111,9 @@ const page = () => {
     setLoading(false);
   };
 
-  // Category menu
-  const handleStyleClick = () => {
-    setCategoryOpen(!isCategoryOpen);
+  // Price menu
+  const handleCategoryClick = () => {
+    setCategoryOpen(true);
     setPriceOpen(false);
     setRecommendationOpen(false);
     setWhatsNewOpen(false);
@@ -159,9 +145,10 @@ const page = () => {
 
   // Clear
   const handleClick = () => {
-    setNewArrival(false)
-    setTrending(false)
-    setBestSeller(false)
+    setNewArrival(false);
+    setTrending(false);
+    setBestSeller(false);
+    setCategoryId('')
     router.push("?", { scroll: false });
   };
 
@@ -178,12 +165,12 @@ const page = () => {
   };
 
   useEffect(() => {
-    getCategory();
+    getCollection();
   }, [name]);
   useEffect(() => {
-    setPage(1)
+    setPage(1);
     getProduct();
-  }, [categoryData, styleName, recommendedParams.length, newArrival, bestSeller, trending, page]);
+  }, [collectionData, recommendedParams.length,categoryId, newArrival, bestSeller, trending, page]);
   useEffect(() => {
     const updatedProductList = productList.map((product) => ({
       ...product,
@@ -227,23 +214,42 @@ const page = () => {
 
   return (
     <div className="pb-20  h-full w-full px-5 sm:px-10 lg:px-0    bg-[#f7eceb] font-gothic">
-      <div className=" pt-10 lg:px-20">
-        {/* Left Side - Text Content */}
+      <div className=" pt-10   lg:px-20">
         <div className="flex  flex-col md:flex-row justify-between items-center md:pt-28 py:20 pt-32 mb-10">
-          <div className="left   w-full 4xl:w-[40%] md:w-1/2 flex flex-col justify-center text-center md:text-left mb-5">
-            <h1 className="text-xl sm:text-2xl md:text-3xl 4xl:text-5xl 3xl:text-4xl text-[#663634] uppercase tracking-[0.32em]">{categoryData?.name}</h1>
-            <p className="mt-2 text-[14px] lg:text-[17px] text-gray-600 3xl:text-2xl 3xl:leading-[1.5] 4xl:leading-[1.6] 4xl:w-full 4xl:text-3xl w-full lg:w-[80%] mx-auto lg:mx-0 lg:leading-[1.5] leading-[2] tracking-[0.04em]">{categoryData?.description}</p>
+          {/* Left Side - Image */}
+          <div className="right w-full md:w-1/2 flex justify-center  md:mt-5">
+            <Image src={collectionData?.image?.url || "/"} alt={collectionData?.name || ""} width={1200} height={1200} priority={true} className="w-full h-auto rounded-lg object-cover md:w-[80%] md:max-w-full" />
           </div>
 
-          {/* Right Side - Image */}
-          <div className="right w-full md:w-1/2 flex justify-center  md:mt-5">
-            <Image src={categoryData?.image?.url || "/"} alt={categoryData?.name || ""} width={1200} height={1200} priority={true} className="w-full h-auto rounded-lg object-cover md:w-[80%] md:max-w-full" />
+          {/* Right Side - Text Content */}
+          <div className="left   w-full 4xl:w-[40%] md:w-1/2 flex flex-col justify-center text-center md:text-left mb-5">
+            <h1 className="text-xl 4xl:w-full lg:w-[80%] text-center sm:text-2xl md:text-3xl 4xl:text-5xl 3xl:text-4xl text-[#663634] uppercase tracking-[0.32em]">{collectionData?.name}</h1>
+            <p className=" text-justify mt-5 text-[14px] lg:text-[17px] text-gray-600 3xl:text-2xl 3xl:leading-[1.5] 4xl:leading-[1.6] 4xl:w-full 4xl:text-3xl w-full lg:w-[80%] mx-auto lg:mx-0 lg:leading-[1.5] leading-[2] tracking-[0.04em]">{collectionData?.description}</p>
           </div>
         </div>
       </div>
 
       {/* Below Section (Category, Price, etc.) */}
       <div className="flex items-center w-[85%] m-auto gap-5 text-[#663634]">
+        {/* Price with additional options when clicked */}
+        <h4 onClick={handleCategoryClick} ref={categoryRef} className={`flex items-center justify-center text-[13px] 3xl:text-xl cursor-pointer hover:font-bold ${isPriceOpen ? "font-bold" : ""}`}>
+          Category <MdKeyboardArrowDown />
+        </h4>
+        {isCategoryOpen && (
+          <div className="absolute flex mt-20 gap-5 bg-white p-2 text-[13px] px-5 shadow-md cursor-pointer">
+            {categoryList.map((category) => (
+              <p
+                key={category?._id}
+                onClick={() => {
+                  categoryId === category?._id ? setCategoryId("") : setCategoryId(category?._id);
+                }}
+                className={`${categoryId === category?._id ? "font-bold" : ""}`}>
+                {category?.name}
+              </p>
+            ))}
+          </div>
+        )}
+
         {/* Price with additional options when clicked */}
         <h4 onClick={handlePriceClick} ref={priceRef} className={`flex items-center justify-center text-[13px] 3xl:text-xl cursor-pointer hover:font-bold ${isPriceOpen ? "font-bold" : ""}`}>
           Price <MdKeyboardArrowDown />
@@ -264,24 +270,6 @@ const page = () => {
               className={priceFilter === "HighToLow" ? "font-bold" : ""}>
               High To Low
             </p>
-          </div>
-        )}
-
-        {/* Category with additional options when clicked */}
-        <h4
-          onClick={handleStyleClick}
-          className={`flex items-center justify-center text-[13px] 3xl:text-xl cursor-pointer hover:font-bold ${isCategoryOpen ? "font-bold" : ""}`}
-          ref={categoryRef} // Add ref to category menu
-        >
-          Style <MdKeyboardArrowDown />
-        </h4>
-        {isCategoryOpen && (
-          <div className="absolute flex mt-20 gap-5 bg-white p-2 text-[13px] px-5 shadow-md cursor-pointer">
-            {styleList?.map((style) => (
-              <p key={style?._id} onClick={() => handleFilterClick("style", style?.name)} className={styleName === style?.name.toLowerCase() ? "font-bold" : ""}>
-                {style?.name}
-              </p>
-            ))}
           </div>
         )}
 
@@ -344,18 +332,25 @@ const page = () => {
       <div className=" w-[85%] m-auto">
         {/* Cards section 1 */}
         <div className=" w-[95%] mx-auto mt-16">
-          <div className={` ${styleName || recommendedParams.length > 0 || trending || bestSeller || newArrival ? "" : "hidden"} flex gap-2 border text-[13px] 3xl:text-xl w-fit px-2 text-[#663634] border-[#663634]`}>
+          <div className={` ${recommendedParams.length > 0 || categoryId || trending || bestSeller || newArrival ? "" : "hidden"} flex gap-2 border text-[13px] 3xl:text-xl w-fit px-2 text-[#663634] border-[#663634]`}>
             Showing Result For:
-            <p className={styleName ? "" : "hidden"}>
-              {styleName}{" "}
-              <span
-                onClick={() => {
-                  handleFilterClick("style", styleName);
-                }}
-                className="cursor-pointer hover:font-semibold ml-1">
-                X
-              </span>
-            </p>
+            {categoryList.map((category) => {
+              if (categoryId === category._id) {
+                return (
+                  <p key={category?._id}>
+                    {category?.name}
+                    <span
+                      onClick={() => {
+                        setCategoryId('')
+                      }}
+                      className="cursor-pointer hover:font-semibold ml-1">
+                      X
+                    </span>
+                  </p>
+                );
+              }
+              return null; 
+            })}
             {recommendedParams.map((recommended, i) => (
               <p className={recommended ? "" : "hidden"} key={i}>
                 {recommended}{" "}
